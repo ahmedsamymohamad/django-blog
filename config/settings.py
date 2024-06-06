@@ -1,5 +1,6 @@
 import environ
 from pathlib import Path
+import os
 
 env = environ.Env()
 
@@ -94,7 +95,8 @@ DATABASES = {
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
     'API_KEY':    env('CLOUDINARY_API_KEY'),
-    'API_SECRET': env('CLOUDINARY_API_SECRET')
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
+    'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest')
 }
 
 # Password validation
