@@ -124,6 +124,7 @@ celerybeat.pid
 .venv
 env/
 /myenv
+myenv/
 venv/
 ENV/
 env.bak/
@@ -163,4 +164,3 @@ cython_debug/
 .prettierignore
 notes.txt
 
-/staticfiles
