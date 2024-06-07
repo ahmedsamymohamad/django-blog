@@ -19,9 +19,9 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 
 if DEBUG:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 else:
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost","django-blog-dzwo.onrender.com"]
+    ALLOWED_HOSTS = ["django-blog-dzwo.onrender.com"]
 
 
 # Application definition
@@ -32,8 +32,8 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
     # sitemaps
     "django.contrib.sites",
@@ -137,7 +137,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
