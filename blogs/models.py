@@ -5,6 +5,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 
+
 class CategoryManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(parent=None)

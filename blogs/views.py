@@ -86,6 +86,10 @@ class CommentPostView(LoginRequiredMixin, SingleObjectMixin, FormView):
         comment.author = self.request.user
         comment.save()
         return super().form_valid(form)
+    
+    def get_object(self, queryset=None):
+        # Retrieve the post associated with the comment
+        return get_object_or_404(Post, slug=self.kwargs.get('post_slug'))
 
     def get_success_url(self):
         post = self.get_object()

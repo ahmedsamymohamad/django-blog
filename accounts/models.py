@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 
 from PIL import Image
+from io import BytesIO
 
 
 class CustomUserManager(BaseUserManager):
@@ -63,7 +64,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    image = models.ImageField(default="default.jpg", upload_to="Profile Pictures/")
+    image = models.ImageField(default="default.jpg", upload_to="profile_pics")
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="following"
     )
@@ -71,11 +72,12 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f"{self.user.email} Profile"
 
+    def get_absolute_url(self):
+        if self.user.username:
+            return reverse("users:profile", kwargs={"username": self.user.username})
+        else:
+            # Handle the case where username is empty
+            return reverse("blogs:index") 
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-        img = Image.open(self.image.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 50)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
