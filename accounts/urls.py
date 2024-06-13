@@ -10,6 +10,11 @@ urlpatterns = [
     path("signup/", views.CustomSignupView.as_view(), name="signup"),
     path("me/edit/", views.ProfileEditView.as_view(), name="profile_edit"),
     path("settings/", views.SettingView.as_view(), name="settings"),
+    path("@<str:username>/follow/", views.AddFollowView.as_view(), name="follow"),
+    path("@<str:username>/", views.ProfileView.as_view(), name="profile"),
+        # path(
+    #     "@<str:username>/followers/", views.FollowerListView.as_view(), name="followers"
+    # ),
     path(
         "password-change/",
         views.CustomPasswordChangeView.as_view(),

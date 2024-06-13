@@ -80,23 +80,26 @@ class CommentPostView(LoginRequiredMixin, SingleObjectMixin, FormView):
     slug_url_kwarg = "post_slug"
     template_name = "blogs/post_detail.html"
 
+    def post(self, request, *args, **kwargs):
+        # Ensure the object is retrieved and set
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
     def form_valid(self, form):
         comment = form.save(commit=False)
-        comment.post = self.get_object()
+        comment.post = self.object
         comment.author = self.request.user
         comment.save()
         return super().form_valid(form)
-    
-    def get_object(self, queryset=None):
-        # Retrieve the post associated with the comment
-        return get_object_or_404(Post, slug=self.kwargs.get('post_slug'))
 
+    def form_invalid(self, form):
+        # Ensure context with the object is provided on form invalid
+        context = self.get_context_data(form=form)
+        context['object'] = self.object
+        return self.render_to_response(context)
+    
     def get_success_url(self):
-        post = self.get_object()
-        return reverse(
-            "blogs:post-detail",
-            kwargs={"username": post.author.username, "post_slug": post.slug},
-        )
+        return reverse("blogs:post-detail", kwargs={"username": self.object.author.username, "post_slug": self.object.slug})
 
 
 class PostDetailView(DetailView):

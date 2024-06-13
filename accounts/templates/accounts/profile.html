@@ -63,11 +63,6 @@
                 >
               </h2>
               <p class="card-text">{{ post.body }}</p>
-              <a
-                class="badge bg-secondary text-decoration-none link-light"
-                href="#!"
-                >Web Design
-              </a>
               <span class="text-muted small px-2"
                 >{{ post.reading_time_minutes }} min read
               </span>
@@ -98,7 +93,7 @@
             </h5>
 
             {% comment %} <a class="text-decoration-none link-secondary" href="{% url "users:followers" user.username %}">{{ user.followers.all.count }} followers</a> {% endcomment %}
-            <a class="text-decoration-none link-secondary" href="#">1 followers</a>
+            <a class="text-decoration-none link-secondary" href="#">{{followers}} followers</a> 
             
             {% if user.headline %}
             <p class="text-muted mt-3 mb-1">{{ user.headline }}</p>
@@ -112,11 +107,11 @@
               Edit profile
               </a>
               {% else %}
-              <form action="{% url "users:follow" user.username %}" method="post">
+              <form action="{% url 'accounts:follow' user.username %}" method="post">
                 {% csrf_token %}
                 <button class="btn btn-success my-2" type="submit">Follow</button>
               </form>
-              {% endif %}
+              {% endif %} 
             </div>
           </div>
         </div>

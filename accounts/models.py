@@ -59,7 +59,7 @@ class CustomUser(AbstractUser):
         return self.email
 
     def get_absolute_url(self):
-        return reverse("users:profile", kwargs={"username": self.username})
+        return reverse("accounts:profile", kwargs={"username": self.username})
 
 
 class Profile(models.Model):
@@ -74,7 +74,7 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         if self.user.username:
-            return reverse("users:profile", kwargs={"username": self.user.username})
+            return reverse("accounts:profile", kwargs={"username": self.user.username})
         else:
             # Handle the case where username is empty
             return reverse("blogs:index") 

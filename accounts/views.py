@@ -70,10 +70,16 @@ class CustomPasswordResetCompleteView(views.PasswordResetCompleteView):
 
 
 class ProfileView(generic.TemplateView):
+    model = Profile
     template_name = "accounts/profile.html"
+    context_object_name = 'profile'
+
+    def get_object(self):
+        return get_object_or_404(Profile, user__username=self.kwargs['username'])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        profile = self.get_object()
         username = self.kwargs.get("username")
         user = get_object_or_404(User, username=username)
         post_list = Post.published.filter(author=user)
@@ -82,17 +88,32 @@ class ProfileView(generic.TemplateView):
         posts = paginator.get_page(page_number)
         context["posts"] = posts
         context["user"] = user
+        context['followers'] = profile.followers.count()   
         return context
 
 
-class AddFollowView(generic.TemplateView):
+class AddFollowView(generic.View):
     def post(self, request, *args, **kwargs):
         username = self.kwargs.get("username")
-        profile = get_object_or_404(Profile, user=username)
-        print("---------")
-        print(profile)
-        print("---------")
-
+        user_to_follow = get_object_or_404(User, username=username)
+        profile = user_to_follow.profile  # Assuming Profile is related to User with a OneToOne field
+        if request.user.is_authenticated:
+            if profile != request.user.profile:
+                if profile.followers.filter(id=request.user.id).exists():
+                    profile.followers.remove(request.user)
+                else:
+                    profile.followers.add(request.user)
+    def post(self, request, *args, **kwargs):
+        username = self.kwargs.get("username")
+        user_to_follow = get_object_or_404(User, username=username)
+        profile = user_to_follow.profile  # Assuming Profile is related to User with a OneToOne field
+        if request.user.is_authenticated:
+            if profile != request.user.profile:
+                if profile.followers.filter(id=request.user.id).exists():
+                    profile.followers.remove(request.user)
+                else:
+                    profile.followers.add(request.user)
+        return redirect('accounts:profile', username=username)
 
 class ProfileEditView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
@@ -115,7 +136,7 @@ class ProfileEditView(LoginRequiredMixin, generic.View):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            return redirect("users:profile", request.user.username)
+            return redirect("accounts:profile", request.user.username)
 
         context = {
             "u_form": u_form,

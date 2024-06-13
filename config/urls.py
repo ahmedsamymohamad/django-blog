@@ -36,7 +36,6 @@ context = {
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("blogs.urls", namespace="blogs")),
-    path("", include("accounts.user_urls", namespace="users")),
     path("account/", include("accounts.urls", namespace="accounts")),
     path("feed/rss", PostsFeeds(), name="post_feed"),
     path("feed/atom", AtomSiteNewsFeed()),

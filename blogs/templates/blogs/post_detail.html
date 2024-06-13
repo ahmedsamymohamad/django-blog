@@ -25,7 +25,7 @@
                 />
               </a>
               <div class="ms-3">
-                <div>
+                <div class="d-inline-flex align-items-center">
                   <span class="fw-bold">
                     <a
                     class="text-decoration-none text-dark"
@@ -40,7 +40,10 @@
                   </span>
                   &middot;
                   <span>
-                    <a class="text-decoration-none" href="#">Follow</a>
+                    <form class="" action="{% url 'accounts:follow' user.username %}" method="post">
+                      {% csrf_token %}
+                      <button class="btn btn-link my-2" type="submit">Follow</button>
+                    </form>
                   </span>
                 </div>
                 <div class="text-muted">
